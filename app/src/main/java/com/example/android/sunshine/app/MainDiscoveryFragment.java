@@ -9,8 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,10 +47,6 @@ public class MainDiscoveryFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -252,10 +246,11 @@ public class MainDiscoveryFragment extends Fragment {
             @Override
             public int compare(MovieSpecification mSpec1, MovieSpecification mSpec2) {
 
-                if(sortOrder.equals("Most Popular")){
-                    return mSpec1.getPopularity().compareTo(mSpec2.getPopularity());
-                }else{
-                    return mSpec1.getRating().compareTo(mSpec2.getRating());
+
+                if (sortOrder.equals("Most Popular")) {
+                    return Double.compare(Double.parseDouble(mSpec2.getPopularity()), Double.parseDouble(mSpec1.getPopularity()));
+                } else {
+                    return Double.compare(Double.parseDouble(mSpec2.getRating()), Double.parseDouble(mSpec1.getRating()));
                 }
             }
         });

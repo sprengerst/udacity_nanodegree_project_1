@@ -26,12 +26,12 @@ public class MovieSpecification implements Serializable {
     public String toString() {
         return "MovieSpecification{" +
                 "id='" + id + '\'' +
+                ", popularity='" + popularity + '\'' +
+                ", rating='" + rating + '\'' +
                 ", title='" + title + '\'' +
                 ", posterPath='" + posterPath + '\'' +
                 ", synopsis='" + synopsis + '\'' +
-                ", rating='" + rating + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
-                ", popularity='" + popularity + '\'' +
                 '}';
     }
 
