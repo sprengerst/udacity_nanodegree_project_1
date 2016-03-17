@@ -1,3 +1,7 @@
+/*
+ * Created by Stefan Sprenger
+ */
+
 package com.sprenger.software.movie.app;
 
 import android.content.Intent;
@@ -50,8 +54,6 @@ public class MainDiscoveryFragment extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortOrder = prefs.getString(getString(R.string.pref_sortorder_key), getResources().getStringArray(R.array.pref_sortorder_keystore)[0]);
 
-        System.out.println("SORTORDER: "+sortOrder);
-
         fetchMovieTask.execute(sortOrder);
     }
 
@@ -71,7 +73,6 @@ public class MainDiscoveryFragment extends Fragment {
                                                 startActivity(detailedViewIntent);
                                             }
                                         }
-
 
         );
 
@@ -105,7 +106,7 @@ public class MainDiscoveryFragment extends Fragment {
                         .appendPath("movie")
                         .appendPath("top_rated")
                         .appendQueryParameter("page", "1")
-                        .appendQueryParameter("api_key", "d19539dd75c57ddc49feeaa144b95dba");
+                        .appendQueryParameter("api_key", getString(R.string.tmdb_api_key));
 
                 URL url = new URL(builder.build().toString());
 
@@ -162,7 +163,6 @@ public class MainDiscoveryFragment extends Fragment {
             movieGridAdapter.addAll(movies);
         }
     }
-
 
     private ArrayList<MovieSpecification> getMovieDataFromJson(String forecastJsonStr, final String sortOrder)
             throws JSONException, ParseException {

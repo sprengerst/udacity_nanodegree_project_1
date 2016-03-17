@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Created by Stefan Sprenger
+  -->
+
 <resources>
     <string-array name="pref_sortorder_keystore">
         <item>most_popular</item>

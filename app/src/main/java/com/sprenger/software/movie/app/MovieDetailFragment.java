@@ -1,3 +1,7 @@
+/*
+ * Created by Stefan Sprenger
+ */
+
 package com.sprenger.software.movie.app;
 
 import android.content.Intent;
@@ -34,8 +38,8 @@ public class MovieDetailFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.title_text_detail)).setText(mSpec.getTitle());
 
         List<String> movieDetailList = new ArrayList<>();
-        movieDetailList.add(getString(R.string.release_text)+ String.valueOf(mSpec.getReleaseDate()));
-        movieDetailList.add(getString(R.string.rating_text) + String.valueOf(mSpec.getRating()) + "/10");
+        movieDetailList.add(getString(R.string.release_text) + " " + String.valueOf(mSpec.getReleaseDate()));
+        movieDetailList.add(getString(R.string.rating_text) + " " + String.valueOf(mSpec.getRating()) + "/10");
 
         ArrayAdapter<String> movieDetailAdapter =
                 new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, movieDetailList);
