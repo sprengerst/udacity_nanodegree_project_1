@@ -17,33 +17,30 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="3"
+        android:layout_height="0dp"
         android:layout_gravity="center_horizontal"
+        android:layout_weight="1.88"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/image_view_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#dcdcdc"
-            android:gravity="center"
-            android:padding="20dip"
-            android:textColor="#000000"
-            android:contentDescription="Movieimage"
-            android:layout_weight="1" />
-
-        <TextView
-            android:id="@+id/image_text_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
             android:layout_weight="1"
-            android:background="#d3d3d3"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:contentDescription="Movieimage"
             android:gravity="center"
             android:padding="20dip"
-            android:text="DemoText"
             android:textColor="#000000" />
 
+        <ListView
+            android:id="@+id/movie_details_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:layout_marginTop="15dp"/>
 
     </LinearLayout>
 
@@ -51,14 +48,13 @@
     <TextView
         android:id="@+id/synopsis_text_detail"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#b0b0b0"
-        android:lines="4"
+        android:layout_height="172dp"
+        android:background="#ffffff"
         android:padding="18dip"
         android:scrollbars="vertical"
-        android:text="Row 1"
-        android:textColor="#000"
-        android:textSize="18dp" />
+        android:text="blabdfkbs lfbsakld bfklabsd kbflkasdb fsd sf asdf ads fasd f"
+        android:textColor="#737373"
+        android:textSize="18sp" />
 
 
 </LinearLayout>

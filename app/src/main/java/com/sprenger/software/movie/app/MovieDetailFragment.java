@@ -7,10 +7,15 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MovieDetailFragment extends Fragment {
@@ -23,11 +28,19 @@ public class MovieDetailFragment extends Fragment {
 
         Intent intent = getActivity().getIntent();
 
-        MovieSpecification  mSpec = (MovieSpecification) intent.getExtras().getSerializable(Intent.EXTRA_SUBJECT);
+        MovieSpecification mSpec = (MovieSpecification) intent.getExtras().getSerializable(Intent.EXTRA_SUBJECT);
         assert mSpec != null;
 
         ((TextView) rootView.findViewById(R.id.title_text_detail)).setText(mSpec.getTitle());
-        ((TextView) rootView.findViewById(R.id.image_text_detail)).setText(String.valueOf(mSpec.getRating()));
+
+        List<String> movieDetailList = new ArrayList<>();
+        movieDetailList.add(getString(R.string.release_text)+ String.valueOf(mSpec.getReleaseDate()));
+        movieDetailList.add(getString(R.string.rating_text) + String.valueOf(mSpec.getRating()) + "/10");
+
+        ArrayAdapter<String> movieDetailAdapter =
+                new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, movieDetailList);
+
+        ((ListView) rootView.findViewById(R.id.movie_details_list)).setAdapter(movieDetailAdapter);
         ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setText(mSpec.getSynopsis());
         ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setMovementMethod(new ScrollingMovementMethod());
 
