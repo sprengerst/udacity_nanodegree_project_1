@@ -1,5 +1,5 @@
 
-package com.example.android.sunshine.app;
+package com.sprenger.software.movie.app;
 
 import android.content.Intent;
 import android.os.Bundle;

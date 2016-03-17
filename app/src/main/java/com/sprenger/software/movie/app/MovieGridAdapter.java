@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app;
+package com.sprenger.software.movie.app;
 
 import android.content.Context;
 import android.view.LayoutInflater;

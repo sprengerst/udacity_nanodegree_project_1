@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
-        applicationId "com.example.android.sunshine.app"
+        applicationId 'com.sprenger.software.movie.app'
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -17,6 +16,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 repositories {
@@ -24,8 +25,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.android.support:gridlayout-v7:22.2.1'
 }

@@ -1,4 +1,4 @@
-package com.example.android.sunshine.app;
+package com.sprenger.software.movie.app;
 
 import java.io.Serializable;
 
