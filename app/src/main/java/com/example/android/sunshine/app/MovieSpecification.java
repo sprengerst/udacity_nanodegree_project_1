@@ -17,6 +17,15 @@ public class MovieSpecification implements Serializable {
     private String releaseDate;
     private String popularity;
 
+    public MovieSpecification(String id, String title, String posterPath, String synopsis, String rating, String releaseDate, String popularity) {
+        this.title = title;
+        this.popularity = popularity;
+        this.posterPath = "http://image.tmdb.org/t/p/w185/"+posterPath;
+        this.synopsis = synopsis;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+        this.id = id;
+    }
 
     public String getId() {
         return id;
@@ -49,17 +58,6 @@ public class MovieSpecification implements Serializable {
 
     public String getReleaseDate() {
         return releaseDate;
-    }
-
-    public MovieSpecification(String id, String title, String posterPath, String synopsis, String rating, String releaseDate, String popularity) {
-        this.title = title;
-        this.popularity = popularity;
-        this.posterPath = "http://image.tmdb.org/t/p/w185/"+posterPath;
-        this.synopsis = synopsis;
-        this.rating = rating;
-        this.releaseDate = releaseDate;
-        this.id = id;
-
     }
 
     public String getPosterPath() {

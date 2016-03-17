@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -35,8 +34,7 @@ import java.util.Comparator;
  */
 public class MainDiscoveryFragment extends Fragment {
 
-    private CustomGridAdapter mForecastAdapter;
-
+    private MovieGridAdapter movieGridAdapter;
 
     public MainDiscoveryFragment() {
     }
@@ -45,18 +43,6 @@ public class MainDiscoveryFragment extends Fragment {
     public void onCreate(Bundle instance) {
         super.onCreate(instance);
         setHasOptionsMenu(true);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_refresh:
-                updateMovieGrid();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private void updateMovieGrid() {
@@ -75,15 +61,15 @@ public class MainDiscoveryFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        this.mForecastAdapter = new CustomGridAdapter(getActivity(), new ArrayList<MovieSpecification>());
+        View rootView = inflater.inflate(R.layout.fragment_discovery_main, container, false);
+        this.movieGridAdapter = new MovieGridAdapter(getActivity(), new ArrayList<MovieSpecification>());
         GridView gridView = (GridView) rootView.findViewById(R.id.gridview_movie_images);
-        gridView.setAdapter(this.mForecastAdapter);
+        gridView.setAdapter(this.movieGridAdapter);
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                             @Override
                                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                Intent detailedViewIntent = new Intent(getActivity(), DetailActivity.class).putExtra(Intent.EXTRA_SUBJECT, mForecastAdapter.getItem(i));
+                                                Intent detailedViewIntent = new Intent(getActivity(), MovieDetailActivity.class).putExtra(Intent.EXTRA_SUBJECT, movieGridAdapter.getItem(i));
                                                 startActivity(detailedViewIntent);
                                             }
                                         }
@@ -194,10 +180,10 @@ public class MainDiscoveryFragment extends Fragment {
 
             //FIXME
             if (movies != null) {
-                mForecastAdapter.clear();
+                movieGridAdapter.clear();
 
                 for (MovieSpecification mSpec : movies) {
-                    mForecastAdapter.add(mSpec);
+                    movieGridAdapter.add(mSpec);
                 }
             }
         }
