@@ -19,7 +19,7 @@ public class MovieGridAdapter extends ArrayAdapter<MovieSpecification> {
     private List<MovieSpecification> movieSpecs;
 
     public MovieGridAdapter(Context context, List<MovieSpecification> movieSpecs) {
-        super(context, R.layout.list_image_movie, movieSpecs);
+        super(context, R.layout.single_movie_grid_element, movieSpecs);
 
         this.context = context;
         this.movieSpecs = movieSpecs;
@@ -29,7 +29,7 @@ public class MovieGridAdapter extends ArrayAdapter<MovieSpecification> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (null == convertView) {
-            convertView = inflater.inflate(R.layout.list_image_movie, parent, false);
+            convertView = inflater.inflate(R.layout.single_movie_grid_element, parent, false);
 
         }
 

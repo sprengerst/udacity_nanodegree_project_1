@@ -48,7 +48,7 @@ public class MainDiscoveryFragment extends Fragment {
         AsyncTask<String, Void, ArrayList<MovieSpecification>> fetchMovieTask = new FetchMovieDataTask();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortOrder = prefs.getString(getString(R.string.pref_sortorder_key), getResources().getStringArray(R.array.pref_units_val)[0]);
+        String sortOrder = prefs.getString(getString(R.string.pref_sortorder_key), getResources().getStringArray(R.array.pref_sortorder_keystore)[0]);
 
         System.out.println("SORTORDER: "+sortOrder);
 
@@ -199,7 +199,7 @@ public class MainDiscoveryFragment extends Fragment {
         Collections.sort(resultStrs, new Comparator<MovieSpecification>() {
             @Override
             public int compare(MovieSpecification mSpec1, MovieSpecification mSpec2) {
-                if (sortOrder.equals(getResources().getStringArray(R.array.pref_units_val)[0])) {
+                if (sortOrder.equals(getResources().getStringArray(R.array.pref_sortorder_keystore)[0])) {
                     return Double.compare(mSpec2.getPopularity(), mSpec1.getPopularity());
                 } else {
                     return Double.compare(mSpec2.getRating(), mSpec1.getRating());

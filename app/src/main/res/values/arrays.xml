@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_units_val">
+    <string-array name="pref_sortorder_keystore">
         <item>most_popular</item>
      <item>top_rated</item>
     </string-array>
 
-    <string-array name="pref_units_key">
+    <string-array name="pref_sortorder_valuestore">
         <item>Most Popular</item>
         <item>Top Rated</item>
     </string-array>
