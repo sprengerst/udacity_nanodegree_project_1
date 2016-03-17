@@ -207,9 +207,9 @@ public class MainDiscoveryFragment extends Fragment {
             }
         });
 
-        for (MovieSpecification s : movieCollectionList) {
-            Log.v("MovieEntries", "Movie Entry: " + s);
-        }
+//        for (MovieSpecification s : movieCollectionList) {
+//            Log.v("MovieEntries", "Movie Entry: " + s);
+//        }
 
         return movieCollectionList;
 
