@@ -2,25 +2,20 @@ package com.example.android.sunshine.app;
 
 import java.io.Serializable;
 
-/**
- *
- * Created by stefa on 17.03.2016.
- *
- */
 public class MovieSpecification implements Serializable {
 
     private String id;
     private String title;
     private String posterPath;
     private String synopsis;
-    private String rating;
+    private double rating;
     private String releaseDate;
-    private String popularity;
+    private double popularity;
 
-    public MovieSpecification(String id, String title, String posterPath, String synopsis, String rating, String releaseDate, String popularity) {
+    public MovieSpecification(String id, String title, String posterPath, String synopsis, double rating, String releaseDate, double popularity) {
         this.title = title;
         this.popularity = popularity;
-        this.posterPath = "http://image.tmdb.org/t/p/w185/"+posterPath;
+        this.posterPath = posterPath;
         this.synopsis = synopsis;
         this.rating = rating;
         this.releaseDate = releaseDate;
@@ -52,7 +47,7 @@ public class MovieSpecification implements Serializable {
         return synopsis;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
@@ -64,7 +59,7 @@ public class MovieSpecification implements Serializable {
         return posterPath;
     }
 
-    public String getPopularity() {
+    public double getPopularity() {
         return popularity;
     }
 }

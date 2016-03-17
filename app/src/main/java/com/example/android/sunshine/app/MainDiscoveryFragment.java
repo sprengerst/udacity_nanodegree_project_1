@@ -24,14 +24,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MainDiscoveryFragment extends Fragment {
 
     private MovieGridAdapter movieGridAdapter;
@@ -46,20 +45,19 @@ public class MainDiscoveryFragment extends Fragment {
     }
 
     private void updateMovieGrid() {
-
         AsyncTask<String, Void, ArrayList<MovieSpecification>> fetchMovieTask = new FetchMovieDataTask();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortOrder = prefs.getString(getString(R.string.pref_sortorder_key),"DEFAULT");
+        String sortOrder = prefs.getString(getString(R.string.pref_sortorder_key), getResources().getStringArray(R.array.pref_units_val)[0]);
+
+        System.out.println("SORTORDER: "+sortOrder);
 
         fetchMovieTask.execute(sortOrder);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
 
         View rootView = inflater.inflate(R.layout.fragment_discovery_main, container, false);
         this.movieGridAdapter = new MovieGridAdapter(getActivity(), new ArrayList<MovieSpecification>());
@@ -79,7 +77,6 @@ public class MainDiscoveryFragment extends Fragment {
 
         updateMovieGrid();
 
-
         return rootView;
     }
 
@@ -98,10 +95,9 @@ public class MainDiscoveryFragment extends Fragment {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
-            String forecastJsonStr = null;
+            String moviesJSONStr = null;
 
             try {
-
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
                         .authority("api.themoviedb.org")
@@ -110,42 +106,29 @@ public class MainDiscoveryFragment extends Fragment {
                         .appendPath("top_rated")
                         .appendQueryParameter("page", "1")
                         .appendQueryParameter("api_key", "d19539dd75c57ddc49feeaa144b95dba");
-                String tmdbUrl = builder.build().toString();
 
-                System.out.println("GENERATED URL: " + tmdbUrl);
+                URL url = new URL(builder.build().toString());
 
-                URL url = new URL(tmdbUrl);
-
-
-                // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
-
                 urlConnection.connect();
 
-
-                // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
-                    // Nothing to do.
                     return null;
                 }
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
                     buffer.append(line + "\n");
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty.  No point in parsing.
                     return null;
                 }
-                forecastJsonStr = buffer.toString();
+                moviesJSONStr = buffer.toString();
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 return null;
@@ -162,12 +145,9 @@ public class MainDiscoveryFragment extends Fragment {
                 }
             }
 
-
-
-
             try {
-                return getMovieDataFromJson(forecastJsonStr,strings[0]);
-            } catch (JSONException e) {
+                return getMovieDataFromJson(moviesJSONStr,strings[0]);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -177,26 +157,17 @@ public class MainDiscoveryFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<MovieSpecification> movies) {
-
-            //FIXME
-            if (movies != null) {
-                movieGridAdapter.clear();
-
-                for (MovieSpecification mSpec : movies) {
-                    movieGridAdapter.add(mSpec);
-                }
-            }
+            assert movieGridAdapter!=null;
+            movieGridAdapter.clear();
+            movieGridAdapter.addAll(movies);
         }
     }
 
 
     private ArrayList<MovieSpecification> getMovieDataFromJson(String forecastJsonStr, final String sortOrder)
-            throws JSONException {
+            throws JSONException, ParseException {
 
-        // These are the names of the JSON objects that need to be extracted.
-        final String OWM_LIST = "results";
-
-
+        final String FILM_LIST = "results";
         final String ID = "id";
         final String TITLE = "original_title";
         final String SYNOPSIS = "overview";
@@ -206,7 +177,7 @@ public class MainDiscoveryFragment extends Fragment {
         final String POPULARITY = "popularity";
 
         JSONObject pageJSON = new JSONObject(forecastJsonStr);
-        JSONArray movieArray = pageJSON.getJSONArray(OWM_LIST);
+        JSONArray movieArray = pageJSON.getJSONArray(FILM_LIST);
 
         ArrayList<MovieSpecification> resultStrs = new ArrayList<>();
 
@@ -214,48 +185,38 @@ public class MainDiscoveryFragment extends Fragment {
 
             JSONObject singleMovieJSON = movieArray.getJSONObject(i);
 
-            // description is in a child array called "weather", which is 1 element long.
             String movieId = singleMovieJSON.getString(ID);
             String movieTitle = singleMovieJSON.getString(TITLE);
             String movieSynopsis = singleMovieJSON.getString(SYNOPSIS);
-            String moviePoster = singleMovieJSON.getString(POSTER);
-            String movieRating = singleMovieJSON.getString(RATING);
-            String movieReleaseDate = singleMovieJSON.getString(RELEASEDATE);
-            String moviePopularity = singleMovieJSON.getString(POPULARITY);
-
+            String moviePoster = getString(R.string.tmdb_image_link)+singleMovieJSON.getString(POSTER);
+            double movieRating = Double.parseDouble(singleMovieJSON.getString(RATING));
+            String movieReleaseDate = extractReleaseYear(singleMovieJSON.getString(RELEASEDATE));
+            double moviePopularity = Double.parseDouble(singleMovieJSON.getString(POPULARITY));
 
             resultStrs.add(new MovieSpecification(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, moviePopularity));
         }
 
-        // Sorting
         Collections.sort(resultStrs, new Comparator<MovieSpecification>() {
             @Override
             public int compare(MovieSpecification mSpec1, MovieSpecification mSpec2) {
-
-
-                if (sortOrder.equals("Most Popular")) {
-                    return Double.compare(Double.parseDouble(mSpec2.getPopularity()), Double.parseDouble(mSpec1.getPopularity()));
+                if (sortOrder.equals(getResources().getStringArray(R.array.pref_units_val)[0])) {
+                    return Double.compare(mSpec2.getPopularity(), mSpec1.getPopularity());
                 } else {
-                    return Double.compare(Double.parseDouble(mSpec2.getRating()), Double.parseDouble(mSpec1.getRating()));
+                    return Double.compare(mSpec2.getRating(), mSpec1.getRating());
                 }
             }
         });
 
         for (MovieSpecification s : resultStrs) {
-            Log.v("FORECAST", "Forecast entry: " + s);
+            Log.v("MovieEntries", "Movie Entry: " + s);
         }
         return resultStrs;
 
     }
 
-
-    private String getReadableDateString(long time) {
-        // Because the API returns a unix timestamp (measured in seconds),
-        // it must be converted to milliseconds in order to be converted to valid date.
-        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
-        return shortenedDateFormat.format(time);
+    private String extractReleaseYear(String date) throws ParseException {
+        Date year = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        return new SimpleDateFormat("yyyy").format(year);
     }
-
-
 
 }

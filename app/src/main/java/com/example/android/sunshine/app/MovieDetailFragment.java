@@ -25,7 +25,7 @@ public class MovieDetailFragment extends Fragment {
 
         MovieSpecification  mSpec = (MovieSpecification) intent.getExtras().getSerializable(Intent.EXTRA_SUBJECT);
         ((TextView) rootView.findViewById(R.id.title_text_detail)).setText(mSpec.getTitle());
-        ((TextView) rootView.findViewById(R.id.image_text_detail)).setText(mSpec.getRating());
+        ((TextView) rootView.findViewById(R.id.image_text_detail)).setText(String.valueOf(mSpec.getRating()));
         ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setText(mSpec.getSynopsis());
         ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setMovementMethod(new ScrollingMovementMethod());
 

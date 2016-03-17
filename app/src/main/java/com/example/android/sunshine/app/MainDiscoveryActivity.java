@@ -36,6 +36,4 @@ public class MainDiscoveryActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
 }

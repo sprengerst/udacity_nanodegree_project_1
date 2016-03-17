@@ -7,9 +7,9 @@
         android:key="@string/pref_sortorder_key"
         android:title="Sort Order"
         android:dialogTitle="Chose sort-order"
-        android:entries="@array/pref_units_keys"
-        android:entryValues="@array/pref_units_values"
-        android:defaultValue="Top Rated"
+        android:entries="@array/pref_units_key"
+        android:entryValues="@array/pref_units_val"
+        android:defaultValue="most_popular"
     />
 
 </PreferenceScreen>
