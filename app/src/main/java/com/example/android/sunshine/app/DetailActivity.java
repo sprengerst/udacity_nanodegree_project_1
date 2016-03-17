@@ -88,18 +88,17 @@ public class DetailActivity extends ActionBarActivity {
             Intent intent = getActivity().getIntent();
 
             MovieSpecification  mSpec = (MovieSpecification) intent.getExtras().getSerializable(Intent.EXTRA_SUBJECT);
-
             ((TextView) rootView.findViewById(R.id.title_text_detail)).setText(mSpec.getTitle());
+            ((TextView) rootView.findViewById(R.id.image_text_detail)).setText(mSpec.getRating());
             ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setText(mSpec.getSynopsis());
-
             ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setMovementMethod(new ScrollingMovementMethod());
+
             Picasso
                     .with(getActivity())
                     .load(mSpec.getPosterPath())
                     .into(((ImageView) rootView.findViewById(R.id.image_view_detail)));
 
 
-            ((TextView) rootView.findViewById(R.id.image_text_detail)).setText(mSpec.getRating());
 
             return rootView;
         }
