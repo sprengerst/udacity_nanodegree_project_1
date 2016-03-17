@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pref_units_entries">
-        <item>Metric</item>
-     <item>Imperial</item>
+        <item>Most Popular</item>
+     <item>Top Rated</item>
     </string-array>
 </resources>

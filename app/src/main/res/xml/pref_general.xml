@@ -3,20 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditTextPreference
-        android:defaultValue="@string/pref_location_default"
-        android:inputType="text"
-        android:key="@string/pref_location_key"
-        android:singleLine="true"
-        android:title="@string/pref_location_label" />
-
     <ListPreference
-        android:key="@string/pref_unit_key"
-        android:title="System"
-        android:dialogTitle="DIALOGTITLE"
+        android:key="@string/pref_sortorder_key"
+        android:title="Sort Order"
+        android:dialogTitle="Chose sort-order"
         android:entries="@array/pref_units_entries"
         android:entryValues="@array/pref_units_entries"
-        android:defaultValue="Metric"
+        android:defaultValue="Top Rated"
     />
 
 </PreferenceScreen>

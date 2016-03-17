@@ -29,6 +29,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -52,27 +54,25 @@ public class MainDiscoveryFragment extends Fragment {
         inflater.inflate(R.menu.forecastfragment, menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-
-                updateWeather();
+                updateMovieGrid();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void updateWeather() {
+    private void updateMovieGrid() {
 
-        AsyncTask<String, Void, ArrayList<MovieSpecification>> weatherTask = new FetchWeatherTask();
+        AsyncTask<String, Void, ArrayList<MovieSpecification>> fetchMovieTask = new FetchMovieDataTask();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String sortOrder = prefs.getString(getString(R.string.pref_sortorder_key),"DEFAULT");
 
-        weatherTask.execute(location);
+        fetchMovieTask.execute(sortOrder);
 
     }
 
@@ -96,32 +96,31 @@ public class MainDiscoveryFragment extends Fragment {
 
 
         );
-        updateWeather();
+
+        updateMovieGrid();
 
 
         return rootView;
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, ArrayList<MovieSpecification>> {
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateMovieGrid();
+    }
 
-        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+    public class FetchMovieDataTask extends AsyncTask<String, Void, ArrayList<MovieSpecification>> {
+
+        private final String LOG_TAG = FetchMovieDataTask.class.getSimpleName();
 
         @Override
         protected ArrayList<MovieSpecification> doInBackground(String... strings) {
-            // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
-            // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-
-                //http://api.themoviedb.org/3/movie/top_rated?page=1&api_key=d19539dd75c57ddc49feeaa144b95dba
-
 
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("http")
@@ -184,14 +183,13 @@ public class MainDiscoveryFragment extends Fragment {
             }
 
 
-            System.out.println("JSON STRING: " + forecastJsonStr);
-            //FIXME
+
+
             try {
-                return getMovieDataFromJson(forecastJsonStr);
+                return getMovieDataFromJson(forecastJsonStr,strings[0]);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //return new String[]{"http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg","http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg","http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg","http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg","http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg"};
 
             return null;
 
@@ -200,20 +198,19 @@ public class MainDiscoveryFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<MovieSpecification> movies) {
 
+            //FIXME
             if (movies != null) {
                 mForecastAdapter.clear();
 
                 for (MovieSpecification mSpec : movies) {
                     mForecastAdapter.add(mSpec);
                 }
-
-
             }
         }
     }
 
 
-    private ArrayList<MovieSpecification> getMovieDataFromJson(String forecastJsonStr)
+    private ArrayList<MovieSpecification> getMovieDataFromJson(String forecastJsonStr, final String sortOrder)
             throws JSONException {
 
         // These are the names of the JSON objects that need to be extracted.
@@ -226,20 +223,14 @@ public class MainDiscoveryFragment extends Fragment {
         final String POSTER = "poster_path";
         final String RATING = "vote_average";
         final String RELEASEDATE = "release_date";
-
+        final String POPULARITY = "popularity";
 
         JSONObject pageJSON = new JSONObject(forecastJsonStr);
         JSONArray movieArray = pageJSON.getJSONArray(OWM_LIST);
 
-
         ArrayList<MovieSpecification> resultStrs = new ArrayList<>();
 
-
         for (int i = 0; i < movieArray.length(); i++) {
-            // For now, using the format "Day, description, hi/low"
-            String day;
-            String description;
-            String highAndLow;
 
             JSONObject singleMovieJSON = movieArray.getJSONObject(i);
 
@@ -250,9 +241,24 @@ public class MainDiscoveryFragment extends Fragment {
             String moviePoster = singleMovieJSON.getString(POSTER);
             String movieRating = singleMovieJSON.getString(RATING);
             String movieReleaseDate = singleMovieJSON.getString(RELEASEDATE);
+            String moviePopularity = singleMovieJSON.getString(POPULARITY);
 
-            resultStrs.add(new MovieSpecification(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate));
+
+            resultStrs.add(new MovieSpecification(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, moviePopularity));
         }
+
+        // Sorting
+        Collections.sort(resultStrs, new Comparator<MovieSpecification>() {
+            @Override
+            public int compare(MovieSpecification mSpec1, MovieSpecification mSpec2) {
+
+                if(sortOrder.equals("Most Popular")){
+                    return mSpec1.getPopularity().compareTo(mSpec2.getPopularity());
+                }else{
+                    return mSpec1.getRating().compareTo(mSpec2.getRating());
+                }
+            }
+        });
 
         for (MovieSpecification s : resultStrs) {
             Log.v("FORECAST", "Forecast entry: " + s);
@@ -269,27 +275,6 @@ public class MainDiscoveryFragment extends Fragment {
         return shortenedDateFormat.format(time);
     }
 
-    /**
-     * Prepare the weather high/lows for presentation.
-     */
-    private String formatHighLows(double high, double low) {
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
-        String unit = prefs.getString(getString(R.string.pref_unit_key), "Metric");
-
-        if (unit.equals("Imperial")) {
-            high = (high * 1.8) + 32;
-            low = (low * 1.8) + 32;
-        }
-
-        // For presentation, assume the user doesn't care about tenths of a degree.
-        long roundedHigh = Math.round(high);
-        long roundedLow = Math.round(low);
-
-        String highLowStr = roundedHigh + "/" + roundedLow;
-        return highLowStr;
-    }
 
 
 }

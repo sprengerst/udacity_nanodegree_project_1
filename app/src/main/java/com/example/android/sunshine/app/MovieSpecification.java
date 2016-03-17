@@ -15,10 +15,24 @@ public class MovieSpecification implements Serializable {
     private String synopsis;
     private String rating;
     private String releaseDate;
+    private String popularity;
 
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "MovieSpecification{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", synopsis='" + synopsis + '\'' +
+                ", rating='" + rating + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", popularity='" + popularity + '\'' +
+                '}';
     }
 
     public String getTitle() {
@@ -37,8 +51,9 @@ public class MovieSpecification implements Serializable {
         return releaseDate;
     }
 
-    public MovieSpecification(String id,String title, String posterPath, String synopsis, String rating, String releaseDate) {
+    public MovieSpecification(String id, String title, String posterPath, String synopsis, String rating, String releaseDate, String popularity) {
         this.title = title;
+        this.popularity = popularity;
         this.posterPath = "http://image.tmdb.org/t/p/w185/"+posterPath;
         this.synopsis = synopsis;
         this.rating = rating;
@@ -47,20 +62,11 @@ public class MovieSpecification implements Serializable {
 
     }
 
-    @Override
-    public String toString() {
-        return "MovieSpecification{" +
-                "id='" + id + '\'' +
-                "title='" + title + '\'' +
-                ", posterPath='" + posterPath + '\'' +
-                ", synopsis='" + synopsis + '\'' +
-                ", rating='" + rating + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
-                '}';
-    }
-
     public String getPosterPath() {
         return posterPath;
     }
 
+    public String getPopularity() {
+        return popularity;
+    }
 }
