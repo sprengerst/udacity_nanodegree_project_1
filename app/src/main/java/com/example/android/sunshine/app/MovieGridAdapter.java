@@ -11,12 +11,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MovieGridAdapter extends ArrayAdapter<MovieSpecification> {
+class MovieGridAdapter extends ArrayAdapter<MovieSpecification> {
 
-    private Context context;
-    private LayoutInflater inflater;
+    private final Context context;
+    private final LayoutInflater inflater;
 
-    private List<MovieSpecification> movieSpecs;
+    private final List<MovieSpecification> movieSpecs;
 
     public MovieGridAdapter(Context context, List<MovieSpecification> movieSpecs) {
         super(context, R.layout.single_movie_grid_element, movieSpecs);

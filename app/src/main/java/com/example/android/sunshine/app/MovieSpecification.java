@@ -2,15 +2,15 @@ package com.example.android.sunshine.app;
 
 import java.io.Serializable;
 
-public class MovieSpecification implements Serializable {
+class MovieSpecification implements Serializable {
 
-    private String id;
-    private String title;
-    private String posterPath;
-    private String synopsis;
-    private double rating;
-    private String releaseDate;
-    private double popularity;
+    private final String id;
+    private final String title;
+    private final String posterPath;
+    private final String synopsis;
+    private final double rating;
+    private final String releaseDate;
+    private final double popularity;
 
     public MovieSpecification(String id, String title, String posterPath, String synopsis, double rating, String releaseDate, double popularity) {
         this.title = title;

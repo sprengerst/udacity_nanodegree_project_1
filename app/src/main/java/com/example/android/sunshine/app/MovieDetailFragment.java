@@ -24,6 +24,8 @@ public class MovieDetailFragment extends Fragment {
         Intent intent = getActivity().getIntent();
 
         MovieSpecification  mSpec = (MovieSpecification) intent.getExtras().getSerializable(Intent.EXTRA_SUBJECT);
+        assert mSpec != null;
+
         ((TextView) rootView.findViewById(R.id.title_text_detail)).setText(mSpec.getTitle());
         ((TextView) rootView.findViewById(R.id.image_text_detail)).setText(String.valueOf(mSpec.getRating()));
         ((TextView) rootView.findViewById(R.id.synopsis_text_detail)).setText(mSpec.getSynopsis());

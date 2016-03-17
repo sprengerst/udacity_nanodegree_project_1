@@ -114,7 +114,7 @@ public class MainDiscoveryFragment extends Fragment {
                 urlConnection.connect();
 
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 if (inputStream == null) {
                     return null;
                 }
@@ -122,7 +122,7 @@ public class MainDiscoveryFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    buffer.append(line + "\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if (buffer.length() == 0) {
@@ -179,7 +179,7 @@ public class MainDiscoveryFragment extends Fragment {
         JSONObject pageJSON = new JSONObject(forecastJsonStr);
         JSONArray movieArray = pageJSON.getJSONArray(FILM_LIST);
 
-        ArrayList<MovieSpecification> resultStrs = new ArrayList<>();
+        ArrayList<MovieSpecification> movieCollectionList = new ArrayList<>();
 
         for (int i = 0; i < movieArray.length(); i++) {
 
@@ -193,10 +193,10 @@ public class MainDiscoveryFragment extends Fragment {
             String movieReleaseDate = extractReleaseYear(singleMovieJSON.getString(RELEASEDATE));
             double moviePopularity = Double.parseDouble(singleMovieJSON.getString(POPULARITY));
 
-            resultStrs.add(new MovieSpecification(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, moviePopularity));
+            movieCollectionList.add(new MovieSpecification(movieId, movieTitle, moviePoster, movieSynopsis, movieRating, movieReleaseDate, moviePopularity));
         }
 
-        Collections.sort(resultStrs, new Comparator<MovieSpecification>() {
+        Collections.sort(movieCollectionList, new Comparator<MovieSpecification>() {
             @Override
             public int compare(MovieSpecification mSpec1, MovieSpecification mSpec2) {
                 if (sortOrder.equals(getResources().getStringArray(R.array.pref_sortorder_keystore)[0])) {
@@ -207,10 +207,11 @@ public class MainDiscoveryFragment extends Fragment {
             }
         });
 
-        for (MovieSpecification s : resultStrs) {
+        for (MovieSpecification s : movieCollectionList) {
             Log.v("MovieEntries", "Movie Entry: " + s);
         }
-        return resultStrs;
+
+        return movieCollectionList;
 
     }
 
